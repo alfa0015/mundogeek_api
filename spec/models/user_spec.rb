@@ -16,17 +16,12 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #
+require 'rails_helper'
 
-class User < ApplicationRecord
-	# Include default devise modules. Others available are:
-	# :confirmable, :lockable, :timeoutable and :omniauthable
+RSpec.describe User, type: :model do
+  it{should validate_presence_of(:email)}
+  it{should validate_uniqueness_of(:email).case_insensitive}
+  it{should validate_presence_of(:password)}
 
-	#plugins for devise
-	devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
-
-	#relationships
-	has_many :tokens
-	
-	#Validates Rules
-
+  it { should have_many(:tokens) }
 end
