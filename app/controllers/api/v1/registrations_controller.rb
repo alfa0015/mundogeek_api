@@ -7,7 +7,7 @@ class Api::V1::RegistrationsController < ApplicationController
     else
       @user = User.new(user_params)
       if @user.save
-        #@token = @user.tokens.generate_token()
+        @token = @user.tokens.generate_token()
         render "/api/v1/users/show"
       else
         warden.custom_failure!

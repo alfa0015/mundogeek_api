@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       devise_scope :user do
         post :sessions, :to => 'sessions#create'
-        delete :session, :to => 'sessions#destroy'
+        delete :session, :to => 'sessions#logout'
         post :registrations, :to => 'registrations#create'
         delete :registration, :to => 'registration#destroy'
       end
