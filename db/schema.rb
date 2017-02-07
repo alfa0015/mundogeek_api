@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170206185036) do
+ActiveRecord::Schema.define(version: 20170207143405) do
+
+  create_table "products", force: :cascade do |t|
+    t.string   "name"
+    t.decimal  "pricing"
+    t.string   "description"
+    t.string   "status"
+    t.date     "expired"
+    t.integer  "stock"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
 
   create_table "tokens", force: :cascade do |t|
     t.string   "token"

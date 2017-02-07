@@ -1,0 +1,46 @@
+class Api::V1::ProductsController < Api::V1::ApiController
+	before_action :set_product, only: [:show, :edit, :update, :destroy]
+	before_action :authenticate, except:[:index,:show]
+	def index
+		@products = Product.all
+	end
+
+	def show
+	end
+
+	def create
+		@product = Product.new(product_params)
+		if @product.save
+			render "/api/v1/products/show"
+		else
+			render json:{ errors: @product.errors.full_messages}, status: :unprocessable_entity
+		end
+	end
+
+	def update
+		if @product.update(product_params)
+			render "/api/v1/products/show"
+		else
+			render json:{errors:@product.errors},status: :unprocessable_entity
+		end
+	end
+
+	def destroy
+		if @product.destroy
+			render json:{messages:"El producto fue eliminado"},status: :ok
+		else
+			render json:{errors:@product.errors.full_messages},status: :unprocessable_entity
+		end
+	end
+
+	private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_product
+      @product = Product.find(params[:id])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def product_params
+      params.require(:product).permit(:name, :pricing, :description,:status,:expired,:stock)
+    end
+end
