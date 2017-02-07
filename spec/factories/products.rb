@@ -18,7 +18,6 @@ FactoryGirl.define do
     name "MyString"
     pricing "9.99"
     description "MyString"
-    status "MyString"
     expired "2017-02-07"
     stock 1
   end
