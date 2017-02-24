@@ -10,7 +10,7 @@ RSpec.describe Api::V1::ProductsController, type: :request do
 
 		it "mande la lista de Productos" do
 			json = JSON.parse(response.body)
-			expect(json.length).to eq(Product.count)
+			expect(json["data"].length).to eq(Product.count)
 		end
 	end
 
@@ -24,12 +24,12 @@ RSpec.describe Api::V1::ProductsController, type: :request do
 
 		it "manda el producto solicitado" do
 			json = JSON.parse(response.body)
-			expect(json["id"]).to eq(@product.id)
+			expect(json["data"]["id"]).to eq(@product.id)
 		end
 
 		it "Manda los atributos del Producto" do
 			json = JSON.parse(response.body)
-			expect(json.keys).to contain_exactly("id", "name", "pricing", "description", "status", "expired", "stock")
+			expect(json["data"].keys).to contain_exactly("id", "name", "pricing", "description", "status", "expired", "stock","attachments")
 		end
 	end
 
@@ -52,13 +52,15 @@ RSpec.describe Api::V1::ProductsController, type: :request do
 
 			it "Responde con el Producto creado" do
 				json = JSON.parse(response.body)
-				expect(json["name"]).to eq(@product[:name])
+				expect(json["data"]["name"]).to eq(@product[:name])
 			end
 		end
 
 		context "Con Token Invalido" do
 			before :each do
-				post api_v1_products_path
+				producto = FactoryGirl.build(:product)
+				@product = {name:producto.name,pricing:producto.pricing,description:producto.description,status:producto.status,expired:producto.expired,stock:producto.stock}
+				post api_v1_products_path, params: {product:@product}
 			end
 
 			it { expect(response).to have_http_status(:unauthorized) }
@@ -82,7 +84,7 @@ RSpec.describe Api::V1::ProductsController, type: :request do
 
 			it "Actualiza el Producto indicado" do
 				json = JSON.parse(response.body)
-				expect(json["name"]).to eq("new_name")
+				expect(json["data"]["name"]).to eq("new_name")
 			end
 		end
 

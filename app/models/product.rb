@@ -14,14 +14,22 @@
 #
 
 class Product < ApplicationRecord
+	#callbaks
+	#after_create :save_attachments
 	#plugins
 	include AASM
-	#relatioships
 
+	#relatioships
+	has_many :attachments,:dependent => :destroy
+	
 	#Validations Rules
 	validates :name,:pricing,:description,:status,:expired,:stock, presence: true, allow_blank: false
 	validates :pricing,numericality:{greater_than:0}
 	validates :stock,numericality:{greater_than_or_equal_to:0}
+
+	accepts_nested_attributes_for :attachments, :reject_if => lambda { |a| a[:attachment].blank? }, allow_destroy: true
+	accepts_nested_attributes_for :attachments, :reject_if => proc { |attributes| attributes['attachment'].blank? }, :allow_destroy => true
+
 
 	#AASM Configuration
 	aasm column: "status" do
@@ -61,5 +69,13 @@ class Product < ApplicationRecord
 			end
 		end
 	end
+
+	private
+
+		def save_attachments
+  			@attachments.each do |image|
+  				Attachment.create(image:image,product_id:self.id)
+  			end
+  		end
 
 end

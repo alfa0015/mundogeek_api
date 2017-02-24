@@ -2,7 +2,7 @@ class Api::V1::ProductsController < Api::V1::ApiController
 	before_action :set_product, only: [:show, :edit, :update, :destroy]
 	before_action :authenticate, except:[:index,:show]
 	def index
-		@products = Product.all
+		@products = Product.all.includes(:attachments)
 	end
 
 	def show
@@ -10,11 +10,17 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
 	def create
 		@product = Product.new(product_params)
-		if @product.save
-			render "/api/v1/products/show"
-		else
-			render json:{ errors: @product.errors.full_messages}, status: :unprocessable_entity
-		end
+    	#@product.attachments = params[:attachments]
+    	if @product.save
+    		if params[:attachments] 
+    			params[:attachments].each do |picture|
+    				@product.attachments.create(image:picture)
+    			end
+    		end
+    		render "/api/v1/products/show"
+    	else
+    		render json:{errors:@product.errors.full_messages},status: :unprocessable_entity
+    	end
 	end
 
 	def update
@@ -41,6 +47,6 @@ class Api::V1::ProductsController < Api::V1::ApiController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:name, :pricing, :description,:status,:expired,:stock)
+      params.require(:product).permit(:name, :pricing, :description,:status,:expired,:attachments,:stock)
     end
 end

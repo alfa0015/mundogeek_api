@@ -32,6 +32,8 @@ RSpec.describe Product, type: :model do
   it { should_not allow_value(-1).for(:stock) }
   it { should allow_value(0).for(:stock) }
 
+  it { should have_many(:attachments) }
+
   it "Deberia tener status open al crear un producto" do
     producto = FactoryGirl.create(:product)
     expect(Product.last.status).to eq("open")

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   namespace :api, :defaults => { :format => 'json' } do
     namespace :v1 do
       resources :products
+      resources :groups
+      resources :attachments
       devise_scope :user do
         post :sessions, :to => 'sessions#create'
         delete :session, :to => 'sessions#logout'

@@ -16,7 +16,9 @@ gem 'devise'
 
 gem 'aasm'
 
-gem "paperclip", "~> 5.0.0"
+gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
+
+gem 'paperclip-rack', require: 'paperclip/rack'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

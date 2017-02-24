@@ -20,5 +20,6 @@ FactoryGirl.define do
     description "MyString"
     expired "2017-02-07"
     stock 1
+    #attachments Rack::Test::UploadedFile.new("#{Rails.root}/spec/images/s-l1600-1.jpg", "image/jpg")
   end
 end
