@@ -15,6 +15,7 @@
 #  last_sign_in_ip        :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  group_id               :integer
 #
 
 FactoryGirl.define do

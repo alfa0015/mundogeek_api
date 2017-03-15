@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: groups
+# Table name: controls
 #
 #  id         :integer          not null, primary key
 #  name       :string
@@ -8,14 +8,11 @@
 #  updated_at :datetime         not null
 #
 
-class Group < ApplicationRecord
-
+class Control < ApplicationRecord
 	#plugins
 
 	#relationships
-	has_many :users
-	
-	#rules validation
-	validates :name, presence: true, allow_blank: false
 
+	#rules validations
+	validates :name, presence: true, allow_blank: false
 end

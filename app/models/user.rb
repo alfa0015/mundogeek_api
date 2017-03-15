@@ -15,6 +15,7 @@
 #  last_sign_in_ip        :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  group_id               :integer
 #
 
 class User < ApplicationRecord
@@ -26,7 +27,7 @@ class User < ApplicationRecord
 
 	#relationships
 	has_many :tokens
-	
+	belongs_to :group
 	#Validates Rules
 
 end
