@@ -10,16 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170314173821) do
-
-  create_table "actions", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "control_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean  "permit"
-    t.index ["control_id"], name: "index_actions_on_control_id"
-  end
+ActiveRecord::Schema.define(version: 20170224151259) do
 
   create_table "attachments", force: :cascade do |t|
     t.string   "image_file_name"
@@ -30,12 +21,6 @@ ActiveRecord::Schema.define(version: 20170314173821) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.index ["product_id"], name: "index_attachments_on_product_id"
-  end
-
-  create_table "controls", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "groups", force: :cascade do |t|

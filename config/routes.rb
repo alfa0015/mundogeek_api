@@ -6,8 +6,6 @@ Rails.application.routes.draw do
       resources :products
       resources :groups
       resources :attachments
-      resources :controls
-      resources :actions
       devise_scope :user do
         post :sessions, :to => 'sessions#create'
         delete :session, :to => 'sessions#logout'
