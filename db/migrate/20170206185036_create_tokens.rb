@@ -1,5 +1,5 @@
 class CreateTokens < ActiveRecord::Migration[5.0]
-  def change
+  def up
     create_table :tokens do |t|
       t.string :token
       t.datetime :expires_at
@@ -7,5 +7,9 @@ class CreateTokens < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
+  end
+
+  def down
+  	drop_table :tokens
   end
 end

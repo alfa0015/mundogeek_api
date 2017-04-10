@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: groups
+# Table name: controls
 #
 #  id         :integer          not null, primary key
 #  name       :string
@@ -8,14 +8,8 @@
 #  updated_at :datetime         not null
 #
 
-class Group < ApplicationRecord
+require 'rails_helper'
 
-	#plugins
-
-	#relationships
-	has_many :users
-	
-	#rules validation
-	validates :name, presence: true, allow_blank: false
-
+RSpec.describe Control, type: :model do
+  it{should validate_presence_of(:name)}
 end

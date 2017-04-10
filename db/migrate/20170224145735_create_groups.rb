@@ -8,6 +8,6 @@ class CreateGroups < ActiveRecord::Migration[5.0]
   end
 
   def down
-  	drop_table :group
+  	drop_table :groups
   end
 end
