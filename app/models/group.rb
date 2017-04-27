@@ -14,7 +14,7 @@ class Group < ApplicationRecord
 
 	#relationships
 	has_many :users
-	
+	has_many :permissions
 	#rules validation
 	validates :name, presence: true, allow_blank: false
 

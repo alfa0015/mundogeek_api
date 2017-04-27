@@ -14,7 +14,9 @@ class Action < ApplicationRecord
   #plugins 
  
   #relationships 
-  belongs_to :control
+  has_many :permissions
+  has_and_belongs_to_many :controls
+  
   #rules validations 
   validates :name, presence: true, allow_blank: false 
 end

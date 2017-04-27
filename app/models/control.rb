@@ -9,5 +9,9 @@
 #
 
 class Control < ApplicationRecord
+
+	#relationships
+	has_many :permissions
+	has_and_belongs_to_many :actions
 	validates :name, presence: true, allow_blank: false 
 end

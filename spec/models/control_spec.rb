@@ -11,5 +11,7 @@
 require 'rails_helper'
 
 RSpec.describe Control, type: :model do
-  it{should validate_presence_of(:name)}
+	it{should have_many(:permissions)}
+	it { should have_and_belong_to_many(:actions) }
+	it{should validate_presence_of(:name)}
 end

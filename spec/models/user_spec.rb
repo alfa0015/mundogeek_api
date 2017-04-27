@@ -15,7 +15,7 @@
 #  last_sign_in_ip        :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  group_id               :integer
+#  group_id               :integer          default("2")
 #
 
 require 'rails_helper'
@@ -26,4 +26,5 @@ RSpec.describe User, type: :model do
   it{should validate_presence_of(:password)}
 
   it { should have_many(:tokens) }
+  it { should belong_to(:group) }
 end

@@ -13,6 +13,9 @@
 require 'rails_helper'
 
 RSpec.describe Action, type: :model do
-	it { should belong_to(:control) } 
+
+	it { should have_many(:permissions) } 
+	it { should have_and_belong_to_many(:controls) }
 	it {should validate_presence_of(:name)} 
+	
 end

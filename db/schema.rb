@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410190654) do
+ActiveRecord::Schema.define(version: 20170426210426) do
 
   create_table "actions", force: :cascade do |t|
     t.string   "name"
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(version: 20170410190654) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["control_id"], name: "index_actions_on_control_id"
+  end
+
+  create_table "actions_controls", force: :cascade do |t|
+    t.integer  "action_id"
+    t.integer  "control_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action_id"], name: "index_actions_controls_on_action_id"
+    t.index ["control_id"], name: "index_actions_controls_on_control_id"
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -42,6 +51,18 @@ ActiveRecord::Schema.define(version: 20170410190654) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "permissions", force: :cascade do |t|
+    t.integer  "group_id"
+    t.integer  "control_id"
+    t.integer  "action_id"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["action_id"], name: "index_permissions_on_action_id"
+    t.index ["control_id"], name: "index_permissions_on_control_id"
+    t.index ["group_id"], name: "index_permissions_on_group_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -77,7 +98,7 @@ ActiveRecord::Schema.define(version: 20170410190654) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.integer  "group_id"
+    t.integer  "group_id",               default: 2
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["group_id"], name: "index_users_on_group_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

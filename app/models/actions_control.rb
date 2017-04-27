@@ -1,17 +1,14 @@
 # == Schema Information
 #
-# Table name: actions
+# Table name: actions_controls
 #
 #  id         :integer          not null, primary key
-#  name       :string
+#  action_id  :integer
 #  control_id :integer
-#  permit     :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
 
-FactoryGirl.define do
-  factory :action do
-    name "MyString"
-  end
+class ActionsControl < ApplicationRecord
+
 end
