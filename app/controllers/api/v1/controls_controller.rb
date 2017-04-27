@@ -10,7 +10,8 @@ class Api::V1::ControlsController < Api::V1::ApiController
 	end 
 
 	def create 
-		@control = Control.new(control_params) 
+		@control = Control.new(control_params)
+		@control.actions = params[:actions]
 		if @control.save 
 	  		render "/api/v1/controls/show", status: :ok 
 		else 
@@ -36,11 +37,11 @@ class Api::V1::ControlsController < Api::V1::ApiController
 
 	private 
 
-	def set_control 
-	  @control = Control.find(params[:id]) 
-	end 
+		def set_control 
+		  @control = Control.find(params[:id]) 
+		end 
 
-	def control_params 
-	  params.require(:control).permit(:name) 
-	end 
+		def control_params
+		  params.require(:control).permit(:name,:actions)
+		end
 end

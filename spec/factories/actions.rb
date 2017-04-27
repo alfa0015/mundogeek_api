@@ -4,7 +4,6 @@
 #
 #  id         :integer          not null, primary key
 #  name       :string
-#  control_id :integer
 #  permit     :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
@@ -12,6 +11,6 @@
 
 FactoryGirl.define do
   factory :action do
-    name "MyString"
+    name "MyAction"
   end
 end

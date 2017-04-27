@@ -11,5 +11,6 @@
 FactoryGirl.define do
   factory :control do
     name "MyString"
+    actions {[FactoryGirl.create(:action)]}
   end
 end

@@ -72,7 +72,6 @@ RSpec.describe Api::V1::ActionsController, type: :request do
       { 
         name:action_build.name, 
         permit:action_build.permit, 
-        control_id:action_build.control_id 
       } 
     } 
     context "Con Token valido" do 

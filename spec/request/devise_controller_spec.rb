@@ -2,7 +2,8 @@ require 'rails_helper'
 RSpec.describe Api::V1::SessionsController, type: :request do
 	describe "PÖST /sessions" do
 		context "Con Datos Validos" do
-			before :each do 
+			before :each do
+				Group.create([{name:"Administrator"},{name:"User"}])
 				user = FactoryGirl.build(:user)
 				@usuario = {email:user.email,password:user.password,password_confirmation:user.password_confirmation}
 				post '/api/v1/registrations', params: {user: @usuario}

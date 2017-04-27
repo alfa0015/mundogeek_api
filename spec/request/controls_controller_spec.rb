@@ -18,7 +18,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
         json = JSON.parse(response.body) 
         expect(json["data"].length).to eq(Control.count) 
       end 
- 
+
     end 
  
     context "Con token invalido" do 
@@ -57,7 +57,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it "Manda los atributos del Control" do 
         json = JSON.parse(response.body) 
-        expect(json["data"].keys).to contain_exactly("id", "name") 
+        expect(json["data"].keys).to contain_exactly("id", "name", "actions") 
       end 
  
     end 
@@ -82,28 +82,38 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
   describe "POST /controls" do 
     let(:control){ FactoryGirl.build(:control) } 
+    let(:action){FactoryGirl.create(:action)}
     let(:control_params){ 
       { 
-        name:control.name 
+        name:control.name
       } 
     } 
- 
+    let(:action_params){
+      [
+        action.id
+      ]
+    }
     context "con token valido" do 
       before :each do 
-        post api_v1_controls_path, params: { token: token,control:control_params } 
+        post api_v1_controls_path, params: { token: token,control:control_params,actions:action_params} 
       end 
  
       it { expect(response).to have_http_status(:ok) } 
  
       it "Crea un Control" do 
         expect{ 
-          post api_v1_controls_path, params: {token: token, control:control_params } 
+          post api_v1_controls_path, params: {token: token, control:control_params,actions:action_params} 
         }.to change(Control,:count).by(1) 
       end 
  
       it "Responde con el Control creado" do 
         json = JSON.parse(response.body) 
         expect(json["data"]["name"]).to eq(control_params[:name]) 
+      end 
+
+      it "Responde con las acciones asociadas" do 
+        json = JSON.parse(response.body) 
+        expect(json["data"]["actions"].length).to eq(action_params.count) 
       end 
  
     end 
