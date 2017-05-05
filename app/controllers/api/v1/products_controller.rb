@@ -1,6 +1,7 @@
 class Api::V1::ProductsController < Api::V1::ApiController
-	before_action :set_product, only: [:show, :edit, :update, :destroy]
 	before_action :authenticate, except:[:index,:show]
+	load_and_authorize_resource except:[:index,:show]
+	before_action :set_product, only: [:show, :edit, :update, :destroy]
 	def index
 		@products = Product.all.includes(:attachments)
 	end

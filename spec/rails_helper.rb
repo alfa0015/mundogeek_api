@@ -68,6 +68,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include DeviseRequestSpecHelpers, type: :request
+  config.include GeneratePermissionSpecHelpers, type: :request
 
   config.include Paperclip::Shoulda::Matchers
 end

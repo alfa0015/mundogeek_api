@@ -19,6 +19,8 @@ gem 'aasm'
 gem "paperclip", git: "git://github.com/thoughtbot/paperclip.git"
 
 gem 'paperclip-rack', require: 'paperclip/rack'
+
+gem 'cancancan', '~> 1.10'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

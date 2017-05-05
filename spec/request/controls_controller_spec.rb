@@ -1,15 +1,24 @@
 require 'rails_helper' 
-RSpec.describe Api::V1::ControlsController, type: :request do 
+RSpec.describe Api::V1::ControlsController, type: :request do
+
   let(:token){login_user_token} 
-  describe "GET /controls" do 
+  let(:token_admin){login_user_admin_token}
+  let(:generate_permissions){permissions}
+
+  describe "GET /controls" do
+
     let(:control){FactoryGirl.create_list(:control,10)} 
-    let(:control_params){} 
-     
-    context "Con token valido" do 
+    let(:control_params){}
+
+    before :each do
+        generate_permissions
+    end
+    
+    context "Con token Administrador" do 
        
       before :each do 
         control 
-        get api_v1_controls_path, params: {token: token} 
+        get api_v1_controls_path, params: {token: token_admin} 
       end 
  
       it { expect(response).to have_http_status(:ok)} 
@@ -19,9 +28,25 @@ RSpec.describe Api::V1::ControlsController, type: :request do
         expect(json["data"].length).to eq(Control.count) 
       end 
 
+    end
+
+    context "Con token Usuario" do 
+       
+      before :each do 
+        control 
+        get api_v1_controls_path, params: {token: token} 
+      end 
+ 
+      it { expect(response).to have_http_status(:unauthorized)} 
+ 
+      it "responde con errores al consultar los controladores" do 
+        json = JSON.parse(response.body) 
+        expect(json["errors"]).to_not be_empty 
+      end 
+
     end 
  
-    context "Con token invalido" do 
+    context "Sin enviar token " do 
        
       before :each do 
         control 
@@ -30,7 +55,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it { expect(response).to have_http_status(:unauthorized) } 
  
-      it "responde con errores al guardar el Producto" do 
+      it "responde con errores al consultar los controladores" do 
         json = JSON.parse(response.body) 
         expect(json["errors"]).to_not be_empty 
       end 
@@ -40,12 +65,16 @@ RSpec.describe Api::V1::ControlsController, type: :request do
   end 
  
   describe "GET /control/:id" do 
-    let(:control){ FactoryGirl.create(:control) } 
-    context "with token valid" do 
+    let(:control){ FactoryGirl.create(:control) }
+    before :each do
+        generate_permissions
+    end
+
+    context "Con token administrador" do 
        
       before :each do 
         control 
-        get api_v1_control_path(control.id),params:{token:token} 
+        get api_v1_control_path(control.id),params:{token:token_admin} 
       end 
  
       it { expect(response).to have_http_status(:ok)} 
@@ -60,10 +89,26 @@ RSpec.describe Api::V1::ControlsController, type: :request do
         expect(json["data"].keys).to contain_exactly("id", "name", "actions") 
       end 
  
+    end
+
+    context "Con token Usuario" do 
+       
+      before :each do 
+        control 
+        get api_v1_control_path(control.id),params:{token:token} 
+      end 
+ 
+      it { expect(response).to have_http_status(:unauthorized)} 
+ 
+      it "responde con errores al consultar el control" do 
+        json = JSON.parse(response.body) 
+        expect(json["errors"]).to_not be_empty 
+      end  
+ 
     end 
  
  
-    context "with token invalid" do 
+    context "Sin enviar el token" do 
       before :each do 
         control 
         get api_v1_control_path(control.id) 
@@ -71,7 +116,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it { expect(response).to have_http_status(:unauthorized) } 
  
-      it "responde con errores al consultar el grupo" do 
+      it "responde con errores al consultar el control" do 
         json = JSON.parse(response.body) 
         expect(json["errors"]).to_not be_empty 
       end   
@@ -80,7 +125,8 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
   end 
  
-  describe "POST /controls" do 
+  describe "POST /controls" do
+
     let(:control){ FactoryGirl.build(:control) } 
     let(:action){FactoryGirl.create(:action)}
     let(:control_params){ 
@@ -88,21 +134,27 @@ RSpec.describe Api::V1::ControlsController, type: :request do
         name:control.name
       } 
     } 
+
     let(:action_params){
       [
         action.id
       ]
     }
-    context "con token valido" do 
+
+    before :each do
+        generate_permissions
+    end
+
+    context "Con token Administrador" do 
       before :each do 
-        post api_v1_controls_path, params: { token: token,control:control_params,actions:action_params} 
+        post api_v1_controls_path, params: { token: token_admin,control:control_params,actions:action_params} 
       end 
  
       it { expect(response).to have_http_status(:ok) } 
  
       it "Crea un Control" do 
         expect{ 
-          post api_v1_controls_path, params: {token: token, control:control_params,actions:action_params} 
+          post api_v1_controls_path, params: {token: token_admin, control:control_params,actions:action_params} 
         }.to change(Control,:count).by(1) 
       end 
  
@@ -116,6 +168,26 @@ RSpec.describe Api::V1::ControlsController, type: :request do
         expect(json["data"]["actions"].length).to eq(action_params.count) 
       end 
  
+    end
+
+    context "Con token Usuario" do 
+      before :each do 
+        post api_v1_controls_path, params: { token: token,control:control_params,actions:action_params} 
+      end 
+ 
+      it { expect(response).to have_http_status(:unauthorized) } 
+ 
+      it "Crea un Control" do 
+        expect{ 
+          post api_v1_controls_path, params: {token: token, control:control_params,actions:action_params} 
+        }.to change(Control,:count).by(0) 
+      end 
+ 
+      it "responde con errores al intentar crear un control sin permisos" do 
+        json = JSON.parse(response.body) 
+        expect(json["errors"]).to_not be_empty 
+      end 
+ 
     end 
  
     context "con token invalido" do 
@@ -125,7 +197,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it { expect(response).to have_http_status(:unauthorized) } 
  
-      it "responde con errores al consultar el grupo" do 
+      it "responde con errores al intentar crear un control sin enviar un token" do 
         json = JSON.parse(response.body) 
         expect(json["errors"]).to_not be_empty 
       end   
@@ -134,16 +206,23 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
   end 
  
-  describe "PUT/PATCH /control/:id" do 
+  describe "PUT/PATCH /control/:id" do
+
     let(:control){ FactoryGirl.create(:control) } 
     let(:control_params){ 
       { 
         name:"new_name" 
       } 
-    } 
-    context "con token valido" do 
+    }
+
+    before :each do
+        generate_permissions
+    end
+
+    context "con token administrador" do
+
       before :each do 
-        patch api_v1_control_path(control.id), params:{token:token,control:control_params} 
+        patch api_v1_control_path(control.id), params:{token:token_admin,control:control_params} 
       end 
  
       it { expect(response).to have_http_status(:ok) } 
@@ -151,7 +230,22 @@ RSpec.describe Api::V1::ControlsController, type: :request do
       it "Actualiza el Control indicado" do 
         json = JSON.parse(response.body) 
         expect(json["data"]["name"]).to eq(control_params[:name]) 
+      end
+
+    end
+
+    context "Con token Usuario" do 
+      before :each do 
+        patch api_v1_control_path(control.id), params:{token:token,control:control_params} 
       end 
+ 
+      it { expect(response).to have_http_status(:unauthorized) } 
+ 
+      it "responde con errores al intentar actualizar un control sin tener permisos" do 
+        json = JSON.parse(response.body) 
+        expect(json["errors"]).to_not be_empty 
+      end
+
     end 
  
     context "con token invalido" do 
@@ -161,7 +255,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it { expect(response).to have_http_status(:unauthorized) } 
  
-      it "responde con errores al consultar el grupo" do 
+      it "responde con errores al intentar actualizar un control sin tener permisos" do 
         json = JSON.parse(response.body) 
         expect(json["errors"]).to_not be_empty 
       end   
@@ -169,27 +263,47 @@ RSpec.describe Api::V1::ControlsController, type: :request do
     end 
   end 
  
-  describe "DELETE /control/:id" do 
+  describe "DELETE /control/:id" do
+
     let(:control){ FactoryGirl.create(:control) } 
- 
-    context "con token valido" do 
+    
+    before :each do
+        generate_permissions
+    end
+
+    context "Con token administrador" do 
       before :each do  
         control 
       end 
  
       it "Deberia de regresar status ok al eliminar el control indicado" do 
-        delete api_v1_control_path(control.id), params: {token:token} 
+        delete api_v1_control_path(control.id), params: {token:token_admin} 
         expect(response).to have_http_status(:ok) 
       end 
  
       it "Elimina el grupo indicado" do  
         expect{ 
-          delete api_v1_control_path(control.id),params: {token:token} 
+          delete api_v1_control_path(control.id),params: {token:token_admin} 
           }.to change(Control,:count).by(-1) 
       end 
+    end
+
+    context "con token Usuario" do 
+      before :each do 
+        control 
+        delete api_v1_control_path(control.id), params: {token: token} 
+      end 
+ 
+      it { expect(response).to have_http_status(:unauthorized) } 
+ 
+      it "responde con errores al eliminar el control sin tener permisos" do 
+        json = JSON.parse(response.body) 
+        expect(json["errors"]).to_not be_empty 
+      end 
+ 
     end 
  
-    context "con token invalido" do 
+    context "Sin enviar un token" do 
       before :each do 
         control 
         delete api_v1_control_path(control.id) 
@@ -197,7 +311,7 @@ RSpec.describe Api::V1::ControlsController, type: :request do
  
       it { expect(response).to have_http_status(:unauthorized) } 
  
-      it "responde con errores al eliminar el grupo" do 
+      it "responde con errores al eliminar el control sin tener permisos" do 
         json = JSON.parse(response.body) 
         expect(json["errors"]).to_not be_empty 
       end 

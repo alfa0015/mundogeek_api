@@ -1,5 +1,6 @@
 class Api::V1::ActionsController < Api::V1::ApiController 
   before_action :authenticate 
+  load_and_authorize_resource
   before_action :set_action, only: [:show, :edit, :update, :destroy] 
  
   def index 

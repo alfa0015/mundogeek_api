@@ -1,5 +1,5 @@
 class Api::V1::AttachmentsController < Api::V1::ApiController
-	
+	load_and_authorize_resource
 	before_action :authenticate, except:[:index,:show]
 
 	def index
